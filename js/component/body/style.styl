@@ -1,0 +1,32 @@
+.man-figure {
+  width: calc(100% - 40px);
+  max-width: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+
+  &:before {
+    content: '';
+    display: block;
+    padding-bottom: 200%;
+  }
+}
+
+.body-part {
+  position: absolute;
+  background: green;
+}
+
+.body-part--easily-wounded {
+  background: yellow;
+}
+
+.body-part--seriously-wounded {
+  background: red;
+}
+
+.body-part--deadly-wounded {
+  background: black;
+}
