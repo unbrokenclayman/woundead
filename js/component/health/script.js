@@ -35,6 +35,7 @@ export default {
       if (this.deadlyWounds) return true;
       if (this.seriousWounds > 1) return true;
       if (this.seriousWounds && this.easyWounds) return true;
+      if (this.easyWounds > 3) return true;
       return false;
     },
 

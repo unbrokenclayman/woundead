@@ -23,6 +23,7 @@
     "style-loader": "^0.19.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
+    "url-loader": "^2.0.0",
     "vue": "^2.5.11",
     "vue-directive-long-press": "^1.1.0",
     "vue-loader": "^13.6.0",

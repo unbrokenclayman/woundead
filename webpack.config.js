@@ -25,6 +25,10 @@ module.exports = {
         loader: 'pug-loader',
       },
       {
+        test: /\.(png|jpg)$/,
+        loader: 'url-loader',
+      },
+      {
         test: /\.styl$/,
         loader: 'style-loader!css-loader!stylus-loader',
       },

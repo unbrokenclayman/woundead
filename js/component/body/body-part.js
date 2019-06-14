@@ -61,7 +61,10 @@ export default {
       }
       this.$root.$emit('wounded');
       this.resetWoundTimer();
-      if (!this.isDeadlyWounded && !this.$root.isDead && this.isEasilyWounded) {
+      if (
+        !this.isDeadlyWounded && !this.$root.isDead &&
+        (this.isEasilyWounded || this.isSeriouslyWounded)
+      ) {
         this.startWoundTimer(STABILIZATION_TIME);
       }
       this.armorDestroyed = this.hasArmor ? true : false;

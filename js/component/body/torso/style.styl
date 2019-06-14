@@ -1,18 +1,41 @@
 .body-part--torso {
-  width: 50%;
-  left: 50%; top: 0;
+  width: 30%;
+  left: 51%; top: 0;
   transform: translateX(-50%);
-  margin-top: 30%;
+  margin-top: 31%;
 
   &:before {
     content: '';
     display: block;
-    padding-bottom: 200%;
+    padding-bottom: 210%;
+    position: relative;
+    z-index: 10;
   }
 
   .body-part__timer {
     left: 100%;
-    margin-left: 20px;
+    margin-left: 40px;
     top: auto; bottom: 5%;
+  }
+
+  &.body-part--has-armor {
+    &:after {
+      content: '';
+      display: block;
+      width: 110%; height: 100%;
+      background: url(../../../../img/army-skin-platecarrier.png) no-repeat 52% 9% / 90% auto;
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+  }
+
+  &.body-part--easily-wounded:before {
+    background: url(../../../../img/easy-wound-1.png) no-repeat 70% 30% / 45% auto;
+  }
+
+  &.body-part--seriously-wounded:before {
+    background: url(../../../../img/serious-wound-1.png) no-repeat 60% 25% / 70% auto;
   }
 }

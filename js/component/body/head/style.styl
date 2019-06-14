@@ -6,11 +6,23 @@
   &:before {
     content: '';
     display: block;
-    padding-bottom: 100%;
+    padding-bottom: 106%;
   }
 
   .body-part__timer {
     left: 100%;
     margin-left: 20px;
+  }
+
+  &.body-part--has-armor {
+    background: url(../../../../img/army-skin-helmet.png) no-repeat 82% 64% / 82% auto;
+  }
+
+  &.body-part--easily-wounded:before {
+    background: url(../../../../img/easy-wound-6.png) no-repeat 80% 45% / 70% auto;
+  }
+
+  &.body-part--seriously-wounded:before {
+    background: url(../../../../img/serious-wound-6.png) no-repeat 80% 45% / 70% auto;
   }
 }
