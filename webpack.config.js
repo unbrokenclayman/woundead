@@ -1,4 +1,5 @@
-const webpack = require('webpack')
+const webpack = require('webpack');
+const path = require('path');
 
 module.exports = {
   entry: './js/app.js',
@@ -32,6 +33,7 @@ module.exports = {
   resolve: {
     alias: {
       vue: 'vue/dist/vue.js',
+      js: path.resolve(__dirname, 'js'),
     },
   },
 }

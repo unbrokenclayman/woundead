@@ -1,18 +1,17 @@
 import {
   STABILIZATION_TIME,
-  EASY_WOUND_BLEEDING_TIME_AFTER_FIRST_AID,
   SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID,
 } from 'js/config.js';
 
 export default {
-  props: {
-    side: String,
-  },
+  name: 'health-status',
 
   data() {
     return {
-      woundState: 0,
-      hitpoints: 2,
+      woundTimers: [],
+      easyWounds: 0,
+      seriousWounds: 0,
+      deadlyWounds: 0,
       firstAidGiven: false,
       firstAidPoints: 3,
       stabilizationTimer: null,
@@ -21,28 +20,44 @@ export default {
   },
 
   computed: {
-    sideClass() {
-      return `body-part--${this.side}`;
+    bodyParts() {
+      return [
+        this.$root.$refs.body.$refs.head,
+        this.$root.$refs.body.$refs.leftArm,
+        this.$root.$refs.body.$refs.rightArm,
+        this.$root.$refs.body.$refs.torso,
+        this.$root.$refs.body.$refs.leftLeg,
+        this.$root.$refs.body.$refs.rightLeg,
+      ];
     },
 
-    hitpointsLeft() {
-      return this.hitpoints - this.woundState;
-    },
-
-    isHealthly() {
-      return !this.woundState;
-    },
-
-    isEasilyWounded() {
-      return (this.hitpointsLeft == 1 && this.hitpointsLeft != this.hitpoints);
+    isDead() {
+      if (this.deadlyWounds) return true;
+      if (this.seriousWounds > 1) return true;
+      if (this.seriousWounds && this.easyWounds) return true;
+      return false;
     },
 
     isSeriouslyWounded() {
-      return (this.hitpointsLeft <= 0 && this.hitpointsLeft != this.hitpoints);
+      if (this.seriousWounds) return true;
+      if (this.easyWounds > 2) return true;
     },
 
-    isDeadlyWounded() {
-      return this.hitpointsLeft < 0;
+    isEasilyWounded() {
+      if (this.easyWounds) return true;
+    },
+
+    statusText() {
+      if ( this.isDead ) {
+        return 'status: dead';
+      }
+      if ( this.isSeriouslyWounded ) {
+        return 'status: serious wounds';
+      }
+      if ( this.isEasilyWounded ) {
+        return 'status: easy wounds';
+      }
+      return 'status: healthy';
     },
 
     stabilizationTimeLeftFormatted() {
@@ -51,30 +66,7 @@ export default {
   },
 
   methods: {
-    addWound() {
-      if (this.woundState < 3) {
-        this.woundState += 1;
-      }
-      this.$root.$emit('wounded');
-      this.resetWoundTimer();
-      if (!this.isDeadlyWounded && !this.$root.isDead) {
-        this.startWoundTimer(STABILIZATION_TIME);
-      }
-    },
-
-    removeWound() {
-      if (this.woundState > 0) {
-        this.woundState -= 1;
-      }
-    },
-
     giveFirstAid() {
-      if (this.isEasilyWounded) {
-        if (!this.firstAidGiven) {
-          this.resetWoundTimer();
-          this.startWoundTimer(EASY_WOUND_BLEEDING_TIME_AFTER_FIRST_AID)
-        }
-      }
       if (this.isSeriouslyWounded) {
         if (this.firstAidPoints > 0) {
           this.addTimeToWoundTimer(SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
@@ -94,7 +86,7 @@ export default {
             self.stabilizationTimeLeft -= 1000;
           } else {
             clearInterval(self.stabilizationTimer);
-            self.addWound();
+            self.isDead = true;
           }
         }, 1000);
       }
@@ -122,17 +114,41 @@ export default {
 
       return (hours ? hours + ':' : '') + minutes + ':' + seconds;
     },
-
-    editTime() {
-
-    },
   },
 
   mounted() {
     const self = this;
+
+    self.$root.$on('wounded', () => {
+      self.easyWounds = 0;
+      self.seriousWounds = 0;
+      self.deadlyWounds = 0;
+      self.bodyParts.forEach((item) => {
+        if (item.isDeadlyWounded) {
+          self.deadlyWounds += 1;
+          // return;
+        }
+        if (item.isSeriouslyWounded) {
+          self.seriousWounds += 1;
+          // return;
+        }
+        if (item.isEasilyWounded) {
+          self.easyWounds += 1;
+          // return;
+        }
+      });
+      if (self.isDead) {
+        this.$root.$emit('die');
+        return;
+      }
+      if (self.isSeriouslyWounded && self.isEasilyWounded) {
+        self.startWoundTimer(STABILIZATION_TIME);
+      }
+    });
+
     self.$root.$on('die', () => {
       self.resetWoundTimer();
       self.$root.isDead = true;
     });
   },
-}
+};

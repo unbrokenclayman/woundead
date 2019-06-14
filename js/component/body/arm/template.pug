@@ -1,1 +1,3 @@
 .body-part.body-part--arm(@click="addWound" :class="[ sideClass, { 'body-part--easily-wounded': isEasilyWounded, 'body-part--seriously-wounded': isSeriouslyWounded, 'body-part--deadly-wounded': isDeadlyWounded }]")
+  .body-part__timer(v-if="stabilizationTimer" @click.stop="giveFirstAid") {{ stabilizationTimeLeftFormatted }}
+    i.first-aid-icon
