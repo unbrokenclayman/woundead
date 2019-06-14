@@ -25,8 +25,12 @@ export default {
       return `body-part--${this.side}`;
     },
 
+    hitpointsWithArmor() {
+      return this.hasArmor ? this.hitpoints + this.armorHitpoints : this.hitpoints;
+    },
+
     hitpointsLeft() {
-      return this.hitpoints - this.woundState;
+      return this.hitpointsWithArmor - this.woundState;
     },
 
     isHealthly() {
@@ -34,11 +38,11 @@ export default {
     },
 
     isEasilyWounded() {
-      return (this.hitpointsLeft == 1 && this.hitpointsLeft != this.hitpoints);
+      return (this.hitpointsLeft == 1 && this.hitpointsLeft != this.hitpointsWithArmor);
     },
 
     isSeriouslyWounded() {
-      return (this.hitpointsLeft <= 0 && this.hitpointsLeft != this.hitpoints);
+      return (this.hitpointsLeft <= 0 && this.hitpointsLeft != this.hitpointsWithArmor);
     },
 
     isDeadlyWounded() {
@@ -52,14 +56,15 @@ export default {
 
   methods: {
     addWound() {
-      if (this.woundState < 3) {
-        this.woundState += 1;
+      if (this.woundState < this.hitpointsWithArmor + 1) {
+        this.woundState += this.armorDestroyed ? 2 : 1;
       }
       this.$root.$emit('wounded');
       this.resetWoundTimer();
-      if (!this.isDeadlyWounded && !this.$root.isDead) {
+      if (!this.isDeadlyWounded && !this.$root.isDead && this.isEasilyWounded) {
         this.startWoundTimer(STABILIZATION_TIME);
       }
+      this.armorDestroyed = this.hasArmor ? true : false;
     },
 
     removeWound() {
