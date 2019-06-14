@@ -1,0 +1,66 @@
+.time-editor-window {
+  box-sizing: border-box;
+  width: 200px;
+  padding: 10px 20px;
+  position: fixed;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  background: #fff;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, .22);
+
+  .spinner {
+    position: relative;
+    width: 120px;
+  }
+
+  .spinner__inp {
+    box-sizing: border-box;
+    width: calc(100% - 60px);
+    margin-left: 30px;
+    margin-right: 30px;
+    border: none;
+    text-align: center;
+  }
+
+  .spinner__down,
+  .spinner__up {
+    display: block;
+    width: 30px; height: 30px;
+    background: none;
+    border: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    &:before,
+    &:after {
+      content: '';
+      display: block;
+      background: #000;
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    &:before {
+      width: 10px; height: 2px;
+    }
+
+    &:after {
+      width: 2px; height: 10px;
+    }
+  }
+
+  .spinner__down {
+    left: 0;
+
+    &:after {
+      display: none;
+    }
+  }
+
+  .spinner__up {
+    right: 0;
+  }
+}

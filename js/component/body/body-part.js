@@ -4,9 +4,15 @@ import {
   SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID,
 } from 'js/config.js';
 
+import TimeEditor from '../time/time.vue';
+
 export default {
   props: {
     side: String,
+  },
+
+  components: {
+    TimeEditor,
   },
 
   data() {
@@ -17,6 +23,7 @@ export default {
       firstAidPoints: 3,
       stabilizationTimer: null,
       stabilizationTimeLeft: null,
+      timeEditorShown: false,
     }
   },
 
@@ -131,8 +138,8 @@ export default {
       return (hours ? hours + ':' : '') + minutes + ':' + seconds;
     },
 
-    editTime() {
-
+    toggleTimeEditor() {
+      this.timeEditorShown = !this.timeEditorShown;
     },
   },
 

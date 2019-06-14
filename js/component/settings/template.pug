@@ -2,6 +2,7 @@ div.settings-widget
   button.settings-trigger(@click="toggleSettings")
   div.settings-window(v-show="settingsShown")
     button.settings-window__close(@click="toggleSettings")
+    div.settings-caption Armor
     div.settings-item
       select(v-model="hasHelmet")
         option(value="false") No helmet
