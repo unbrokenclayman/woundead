@@ -12759,6 +12759,7 @@ var render = function() {
               }
             ],
             staticClass: "spinner__inp",
+            attrs: { readonly: "readonly" },
             domProps: { value: this.$parent.stabilizationTimeLeftFormatted },
             on: {
               input: function($event) {
@@ -13770,7 +13771,7 @@ exports = module.exports = __webpack_require__(0)(undefined);
 
 
 // module
-exports.push([module.i, "\n.wound-status {\n  position: absolute;\n  top: 10px;\n  left: 10px;\n  display: flex;\n  align-items: center;\n}\n.wound-timer {\n  margin-left: 10px;\n  white-space: nowrap;\n}\n.health-status:after {\n  content: '';\n  display: inline-block;\n  width: 7px;\n  height: 7px;\n  margin-left: 6px;\n  border-radius: 50%;\n  background: #008000;\n}\n.health-status--easy-wounds:after {\n  background: #ff0;\n}\n.health-status--serious-wounds:after {\n  background: #f00;\n}\n.health-status--deadly-wounds:after {\n  background: #000;\n}\n.death-overlay {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  left: 0;\n  top: 0;\n  z-index: 100;\n  background: rgba(0,0,0,0.5);\n  color: #fff;\n}\n.death-overlay__content {\n  position: absolute;\n  left: 50%;\n  top: 50%;\n  transform: translate(-50%, -50%);\n  font-weight: bold;\n  font-size: 2rem;\n}\n", ""]);
+exports.push([module.i, "\n.wound-status {\n  position: absolute;\n  top: 10px;\n  left: 10px;\n  display: flex;\n  align-items: center;\n}\n.wound-timer {\n  margin-left: 10px;\n  white-space: nowrap;\n}\n.health-status:after {\n  content: '';\n  display: inline-block;\n  vertical-align: middle;\n  width: 7px;\n  height: 7px;\n  margin-top: -2px;\n  margin-left: 6px;\n  border-radius: 50%;\n  background: #008000;\n}\n.health-status--easy-wounds:after {\n  background: #ff0;\n}\n.health-status--serious-wounds:after {\n  background: #f00;\n}\n.health-status--deadly-wounds:after {\n  background: #000;\n}\n.death-overlay {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  left: 0;\n  top: 0;\n  z-index: 100;\n  background: rgba(0,0,0,0.5);\n  color: #fff;\n}\n.death-overlay__content {\n  position: absolute;\n  left: 50%;\n  top: 50%;\n  transform: translate(-50%, -50%);\n  font-weight: bold;\n  font-size: 2rem;\n}\n", ""]);
 
 // exports
 
