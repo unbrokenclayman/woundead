@@ -12,6 +12,7 @@ Vue.create({
   el: '#app',
   data: {
     isDead: false,
+    skin: 'marine',
   },
   components: {
     HumanBody,

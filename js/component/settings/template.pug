@@ -2,12 +2,19 @@ div.settings-widget
   button.settings-trigger(@click="toggleSettings")
   div.settings-window(v-show="settingsShown")
     button.settings-window__close(@click="toggleSettings")
-    div.settings-caption Armor
-    div.settings-item
-      select(v-model="hasHelmet")
-        option(value="false") No helmet
-        option(value="true") Helmet
-    div.settings-item
-      select(v-model="hasPlatecarrier")
-        option(value="false") No platecarrier
-        option(value="true") Platecarrier
+    div.settings-group
+      div.settings-caption Armor
+      div.settings-item
+        select(v-model="hasHelmet")
+          option(value="false") No helmet
+          option(value="true") Helmet
+      div.settings-item
+        select(v-model="hasPlatecarrier")
+          option(value="false") No platecarrier
+          option(value="true") Platecarrier
+    div.settings-group
+      div.settings-caption Skin
+      div.settings-item
+        select(v-model="skin")
+          option(value="marine") ISAF
+          option(value="afghan") Afghan

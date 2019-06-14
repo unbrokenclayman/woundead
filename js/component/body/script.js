@@ -5,10 +5,17 @@ import UnitLeg from './leg/leg.vue';
 
 export default {
   name: 'human-body',
+
   components: {
     UnitHead,
     UnitArm,
     UnitTorso,
     UnitLeg,
+  },
+
+  computed: {
+    skinClass() {
+      return this.$root.skin + '-skin';
+    },
   },
 };

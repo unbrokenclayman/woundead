@@ -17,6 +17,15 @@ export default {
     torso() {
       return this.$root.$refs.body.$refs.torso;
     },
+
+    skin: {
+      get() {
+        return this.$root.skin;
+      },
+      set(value) {
+        this.$root.skin = value;
+      },
+    },
   },
 
   watch: {
