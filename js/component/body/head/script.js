@@ -8,7 +8,7 @@ export default Vue.extend({
   data() {
     return {
       hitpoints: 0,
-      hasArmor: true,
+      // hasArmor: true,
     }
   },
 });
