@@ -12960,7 +12960,20 @@ var render = function() {
             },
             [
               _vm._v(_vm._s(_vm.stabilizationTimeLeftFormatted)),
-              _c("i", { staticClass: "first-aid-icon" })
+              _c("i", {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value:
+                      (_vm.isEasilyWounded && !_vm.firstAidGiven) ||
+                      (_vm.isSeriouslyWounded && _vm.firstAidPoints > 0),
+                    expression:
+                      "isEasilyWounded && !firstAidGiven || isSeriouslyWounded && firstAidPoints > 0"
+                  }
+                ],
+                staticClass: "first-aid-icon"
+              })
             ]
           )
         : _vm._e(),
@@ -13146,7 +13159,20 @@ var render = function() {
             },
             [
               _vm._v(_vm._s(_vm.stabilizationTimeLeftFormatted)),
-              _c("i", { staticClass: "first-aid-icon" })
+              _c("i", {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value:
+                      (_vm.isEasilyWounded && !_vm.firstAidGiven) ||
+                      (_vm.isSeriouslyWounded && _vm.firstAidPoints > 0),
+                    expression:
+                      "isEasilyWounded && !firstAidGiven || isSeriouslyWounded && firstAidPoints > 0"
+                  }
+                ],
+                staticClass: "first-aid-icon"
+              })
             ]
           )
         : _vm._e(),
@@ -13441,7 +13467,20 @@ var render = function() {
             },
             [
               _vm._v(_vm._s(_vm.stabilizationTimeLeftFormatted)),
-              _c("i", { staticClass: "first-aid-icon" })
+              _c("i", {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value:
+                      (_vm.isEasilyWounded && !_vm.firstAidGiven) ||
+                      (_vm.isSeriouslyWounded && _vm.firstAidPoints > 0),
+                    expression:
+                      "isEasilyWounded && !firstAidGiven || isSeriouslyWounded && firstAidPoints > 0"
+                  }
+                ],
+                staticClass: "first-aid-icon"
+              })
             ]
           )
         : _vm._e(),
@@ -13627,7 +13666,20 @@ var render = function() {
             },
             [
               _vm._v(_vm._s(_vm.stabilizationTimeLeftFormatted)),
-              _c("i", { staticClass: "first-aid-icon" })
+              _c("i", {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value:
+                      (_vm.isEasilyWounded && !_vm.firstAidGiven) ||
+                      (_vm.isSeriouslyWounded && _vm.firstAidPoints > 0),
+                    expression:
+                      "isEasilyWounded && !firstAidGiven || isSeriouslyWounded && firstAidPoints > 0"
+                  }
+                ],
+                staticClass: "first-aid-icon"
+              })
             ]
           )
         : _vm._e(),
