@@ -11792,6 +11792,10 @@ const SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID = 20 * 60 * 1000;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+const SKIN_KEY = 'WOUNDEAD_SKIN';
+const PLATECARRIER_KEY = 'WOUNDEAD_PLATECARRIER';
+const HELMET_KEY = 'WOUNDEAD_HELMET';
+
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'settings-widget',
 
@@ -11825,17 +11829,36 @@ const SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID = 20 * 60 * 1000;
   watch: {
     hasHelmet() {
       this.head.hasArmor = this.hasHelmet == 'true';
+      localStorage.setItem(HELMET_KEY, this.hasHelmet);
     },
 
     hasPlatecarrier() {
       this.torso.hasArmor = this.hasPlatecarrier == 'true';
+      localStorage.setItem(PLATECARRIER_KEY, this.hasPlatecarrier);
+    },
+
+    skin() {
+      localStorage.setItem(SKIN_KEY, this.skin);
     }
   },
 
   methods: {
     toggleSettings() {
       this.settingsShown = !this.settingsShown;
+    },
+
+    loadSettings() {
+      const helmetSetting = localStorage.getItem(HELMET_KEY);
+      const platecarrierSetting = localStorage.getItem(PLATECARRIER_KEY);
+      const skinSetting = localStorage.getItem(SKIN_KEY);
+      this.hasHelmet = helmetSetting ? helmetSetting : false;
+      this.hasPlatecarrier = platecarrierSetting ? platecarrierSetting : false;
+      this.skin = skinSetting ? skinSetting : 'marine';
     }
+  },
+
+  mounted() {
+    this.loadSettings();
   }
 });
 
