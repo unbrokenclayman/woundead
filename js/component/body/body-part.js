@@ -24,6 +24,7 @@ export default {
       stabilizationTimer: null,
       stabilizationTimeLeft: null,
       timeEditorShown: false,
+      lastTickTime: false,
     }
   },
 
@@ -103,12 +104,15 @@ export default {
       const self = this;
       if (!self.stabilizationTimer) {
         self.stabilizationTimeLeft = time;
-
         self.stabilizationTimer = setInterval(function() {
           if (self.stabilizationTimeLeft > 1000) {
-            self.stabilizationTimeLeft -= 1000;
+            const timeNow = Date.now();
+            const timeDiff = self.lastTickTime ? timeNow - self.lastTickTime : 1000;
+            self.stabilizationTimeLeft -= timeDiff;
+            self.lastTickTime = timeNow;
           } else {
             clearInterval(self.stabilizationTimer);
+            self.lastTickTime = false;
             self.addWound();
           }
         }, 1000);
@@ -125,6 +129,7 @@ export default {
         this.stabilizationTimer = null;
       }
       this.stabilizationTimeLeft = null;
+      self.lastTickTime = false;
     },
 
     millisecondsToTime(ms) {

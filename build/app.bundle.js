@@ -11269,7 +11269,8 @@ return Vue$3;
       firstAidPoints: 3,
       stabilizationTimer: null,
       stabilizationTimeLeft: null,
-      timeEditorShown: false
+      timeEditorShown: false,
+      lastTickTime: false
     };
   },
 
@@ -11346,12 +11347,15 @@ return Vue$3;
       const self = this;
       if (!self.stabilizationTimer) {
         self.stabilizationTimeLeft = time;
-
         self.stabilizationTimer = setInterval(function () {
           if (self.stabilizationTimeLeft > 1000) {
-            self.stabilizationTimeLeft -= 1000;
+            const timeNow = Date.now();
+            const timeDiff = self.lastTickTime ? timeNow - self.lastTickTime : 1000;
+            self.stabilizationTimeLeft -= timeDiff;
+            self.lastTickTime = timeNow;
           } else {
             clearInterval(self.stabilizationTimer);
+            self.lastTickTime = false;
             self.addWound();
           }
         }, 1000);
@@ -11368,6 +11372,7 @@ return Vue$3;
         this.stabilizationTimer = null;
       }
       this.stabilizationTimeLeft = null;
+      self.lastTickTime = false;
     },
 
     millisecondsToTime(ms) {
@@ -11472,7 +11477,6 @@ module.exports = g;
   data() {
     return {
       hitpoints: 0
-      // hasArmor: true,
     };
   }
 }));
@@ -11590,7 +11594,6 @@ const SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID = 20 * 60 * 1000;
   data() {
     return {
       hitpoints: 1
-      // hasArmor: false,
     };
   }
 }));
