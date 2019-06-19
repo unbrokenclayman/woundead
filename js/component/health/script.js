@@ -9,7 +9,6 @@ export default {
 
   data() {
     return {
-      woundTimers: [],
       easyWounds: 0,
       seriousWounds: 0,
       deadlyWounds: 0,

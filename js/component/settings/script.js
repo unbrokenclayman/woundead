@@ -61,6 +61,10 @@ export default {
       this.hasPlatecarrier = platecarrierSetting ? platecarrierSetting : false;
       this.skin = skinSetting ? skinSetting : 'marine';
     },
+
+    resetApp() {
+      this.$root.reset();
+    },
   },
 
   mounted() {
