@@ -2,3 +2,4 @@
   .body-part__timer(v-if="stabilizationTimer" @click.stop="giveFirstAid" v-long-press="500" @long-press-start="toggleTimeEditor") {{ stabilizationTimeLeftFormatted }}
     i.first-aid-icon(v-show="isEasilyWounded && !firstAidGiven || isSeriouslyWounded && firstAidPoints > 0")
   time-editor
+  i.broken-armor-icon(v-if="armorDestroyed")

@@ -1,6 +1,7 @@
 import {
   STABILIZATION_TIME,
   SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID,
+  CONTUSION_TIME,
 } from 'js/config.js';
 
 export default {
@@ -14,8 +15,13 @@ export default {
       deadlyWounds: 0,
       firstAidGiven: false,
       firstAidPoints: 3,
+      isStunned: false,
       stabilizationTimer: null,
       stabilizationTimeLeft: null,
+      stunTimer: null,
+      stunTimeLeft: null,
+      lastTickTime: false,
+      stunLastTickTime: false,
     }
   },
 
@@ -64,6 +70,18 @@ export default {
     stabilizationTimeLeftFormatted() {
       return this.millisecondsToTime(this.stabilizationTimeLeft);
     },
+
+    stunTimeLeftFormatted() {
+      return this.millisecondsToTime(this.stunTimeLeft);
+    },
+  },
+
+  watch: {
+    isStunned(newValue) {
+      if (newValue == true) {
+        this.startStunTimer(CONTUSION_TIME);
+      }
+    }
   },
 
   methods: {
@@ -81,13 +99,35 @@ export default {
       const self = this;
       if (!self.stabilizationTimer) {
         self.stabilizationTimeLeft = time;
-
         self.stabilizationTimer = setInterval(function() {
           if (self.stabilizationTimeLeft > 1000) {
-            self.stabilizationTimeLeft -= 1000;
+            const timeNow = Date.now();
+            const timeDiff = self.lastTickTime ? timeNow - self.lastTickTime : 1000;
+            self.stabilizationTimeLeft -= timeDiff;
+            self.lastTickTime = timeNow;
           } else {
             clearInterval(self.stabilizationTimer);
+            self.lastTickTime = false;
             self.isDead = true;
+          }
+        }, 1000);
+      }
+    },
+
+    startStunTimer(time) {
+      const self = this;
+      if (!self.stunTimer) {
+        self.stunTimeLeft = time;
+        self.stunTimer = setInterval(function() {
+          if (self.stunTimeLeft > 1000) {
+            const timeNow = Date.now();
+            const timeDiff = self.stunLastTickTime ? timeNow - self.stunLastTickTime : 1000;
+            self.stunTimeLeft -= timeDiff;
+            self.stunLastTickTime = timeNow;
+          } else {
+            clearInterval(self.stunTimer);
+            self.stunLastTickTime = false;
+            self.isStunned = false;
           }
         }, 1000);
       }
@@ -103,6 +143,7 @@ export default {
         this.stabilizationTimer = null;
       }
       this.stabilizationTimeLeft = null;
+      this.lastTickTime = false;
     },
 
     millisecondsToTime(ms) {

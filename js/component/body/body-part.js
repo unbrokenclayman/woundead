@@ -57,6 +57,10 @@ export default {
       return this.hitpointsLeft < 0;
     },
 
+    isStunned() {
+      return !this.isHealthly && !this.isEasilyWounded && !this.isSeriouslyWounded;
+    },
+
     stabilizationTimeLeftFormatted() {
       return this.millisecondsToTime(this.stabilizationTimeLeft);
     },
@@ -76,6 +80,9 @@ export default {
         this.startWoundTimer(STABILIZATION_TIME);
       }
       this.armorDestroyed = this.hasArmor ? true : false;
+      if (this.isStunned) {
+        this.$root.$refs.status.isStunned = true;
+      }
     },
 
     removeWound() {
@@ -129,7 +136,7 @@ export default {
         this.stabilizationTimer = null;
       }
       this.stabilizationTimeLeft = null;
-      self.lastTickTime = false;
+      this.lastTickTime = false;
     },
 
     millisecondsToTime(ms) {

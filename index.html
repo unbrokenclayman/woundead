@@ -8,8 +8,8 @@
 <body>
 <div id="app">
   <human-body ref="body"></human-body>
-  <health-status></health-status>
-  <settings-widget></settings-widget>
+  <health-status ref="status"></health-status>
+  <settings-widget ref="settings"></settings-widget>
   <div class="death-overlay" v-if="isDead"><div class="death-overlay__content">DEAD</div></div>
 </div>
 <script src="./build/app.bundle.js"></script>
