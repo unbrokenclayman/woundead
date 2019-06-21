@@ -1,8 +1,4 @@
-import {
-  STABILIZATION_TIME,
-  EASY_WOUND_BLEEDING_TIME_AFTER_FIRST_AID,
-  SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID,
-} from 'js/config.js';
+import { rules } from 'js/config.js';
 
 import TimeEditor from '../time/time.vue';
 
@@ -64,6 +60,10 @@ export default {
     stabilizationTimeLeftFormatted() {
       return this.millisecondsToTime(this.stabilizationTimeLeft);
     },
+
+    rules() {
+      return this.$root.rules;
+    },
   },
 
   methods: {
@@ -77,7 +77,11 @@ export default {
         !this.isDeadlyWounded && !this.$root.isDead &&
         (this.isEasilyWounded || this.isSeriouslyWounded)
       ) {
-        this.startWoundTimer(STABILIZATION_TIME);
+        if (this.isSeriouslyWounded) {
+          this.startWoundTimer(rules[this.rules].SERIOUS_WOUND_STABILIZATION_TIME);
+        } else {
+          this.startWoundTimer(rules[this.rules].EASY_WOUND_STABILIZATION_TIME);
+        }
       }
       this.armorDestroyed = this.hasArmor ? true : false;
       if (this.isStunned) {
@@ -95,12 +99,14 @@ export default {
       if (this.isEasilyWounded) {
         if (!this.firstAidGiven) {
           this.resetWoundTimer();
-          this.startWoundTimer(EASY_WOUND_BLEEDING_TIME_AFTER_FIRST_AID)
+          if (rules[this.rules].EASY_WOUND_BLEEDING_TIME_AFTER_FIRST_AID) {
+            this.startWoundTimer(rules[this.rules].EASY_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
+          }
         }
       }
       if (this.isSeriouslyWounded) {
         if (this.firstAidPoints > 0) {
-          this.addTimeToWoundTimer(SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
+          this.addTimeToWoundTimer(rules[this.rules].SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
           this.firstAidPoints -= 1;
         }
       }
@@ -157,9 +163,16 @@ export default {
 
   mounted() {
     const self = this;
+
     self.$root.$on('die', () => {
       self.resetWoundTimer();
       self.$root.isDead = true;
+    });
+  },
+
+  created() {
+    this.$nextTick(() => {
+      this.firstAidPoints = rules[this.rules].FIRST_AID_POINTS;
     });
   },
 }

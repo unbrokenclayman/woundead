@@ -1,8 +1,4 @@
-import {
-  STABILIZATION_TIME,
-  SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID,
-  CONTUSION_TIME,
-} from 'js/config.js';
+import { rules } from 'js/config.js';
 
 export default {
   name: 'health-status',
@@ -73,12 +69,16 @@ export default {
     stunTimeLeftFormatted() {
       return this.millisecondsToTime(this.stunTimeLeft);
     },
+
+    rules() {
+      return this.$root.rules;
+    },
   },
 
   watch: {
     isStunned(newValue) {
       if (newValue == true) {
-        this.startStunTimer(CONTUSION_TIME);
+        this.startStunTimer(rules[this.rules].CONTUSION_TIME);
       }
     }
   },
@@ -86,8 +86,9 @@ export default {
   methods: {
     giveFirstAid() {
       if (this.isSeriouslyWounded) {
+        console.log(this.firstAidPoints);
         if (this.firstAidPoints > 0) {
-          this.addTimeToWoundTimer(SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
+          this.addTimeToWoundTimer(rules[this.rules].SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
           this.firstAidPoints -= 1;
         }
       }
@@ -167,15 +168,12 @@ export default {
       self.bodyParts.forEach((item) => {
         if (item.isDeadlyWounded) {
           self.deadlyWounds += 1;
-          // return;
         }
         if (item.isSeriouslyWounded) {
           self.seriousWounds += 1;
-          // return;
         }
         if (item.isEasilyWounded) {
           self.easyWounds += 1;
-          // return;
         }
       });
       if (self.isDead) {
@@ -183,13 +181,19 @@ export default {
         return;
       }
       if (self.isSeriouslyWounded && self.isEasilyWounded) {
-        self.startWoundTimer(STABILIZATION_TIME);
+        self.startWoundTimer(rules[this.rules].SERIOUS_WOUND_STABILIZATION_TIME);
       }
     });
 
     self.$root.$on('die', () => {
       self.resetWoundTimer();
       self.$root.isDead = true;
+    });
+  },
+
+  created() {
+    this.$nextTick(() => {
+      this.firstAidPoints = rules[this.rules].FIRST_AID_POINTS;
     });
   },
 };

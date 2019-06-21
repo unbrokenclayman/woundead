@@ -3,6 +3,12 @@ div.settings-widget
   div.settings-window(v-show="settingsShown")
     button.settings-window__close(@click="toggleSettings")
     div.settings-group
+      div.settings-caption Rules
+      div.settings-item
+        select(v-model="rules")
+          option(value="helmand") Helmand
+          option(value="desertThunder") Desert Thunder
+    div.settings-group
       div.settings-caption Armor
       div.settings-item
         select(v-model="hasHelmet")

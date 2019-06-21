@@ -1,6 +1,7 @@
 const SKIN_KEY = 'WOUNDEAD_SKIN';
 const PLATECARRIER_KEY = 'WOUNDEAD_PLATECARRIER';
 const HELMET_KEY = 'WOUNDEAD_HELMET';
+const RULES_KEY = 'WOUNDEAD_RULES';
 
 export default {
   name: 'settings-widget',
@@ -30,6 +31,15 @@ export default {
         this.$root.skin = value;
       },
     },
+
+    rules: {
+      get() {
+        return this.$root.rules;
+      },
+      set(value) {
+        this.$root.rules = value;
+      },
+    },
   },
 
   watch: {
@@ -46,6 +56,10 @@ export default {
     skin() {
       localStorage.setItem(SKIN_KEY, this.skin);
     },
+
+    rules() {
+      localStorage.setItem(RULES_KEY, this.rules);
+    },
   },
 
   methods: {
@@ -57,9 +71,11 @@ export default {
       const helmetSetting = localStorage.getItem(HELMET_KEY);
       const platecarrierSetting = localStorage.getItem(PLATECARRIER_KEY);
       const skinSetting = localStorage.getItem(SKIN_KEY);
+      const rulesSetting = localStorage.getItem(RULES_KEY);
       this.hasHelmet = helmetSetting ? helmetSetting : false;
       this.hasPlatecarrier = platecarrierSetting ? platecarrierSetting : false;
       this.skin = skinSetting ? skinSetting : 'marine';
+      this.rules = rulesSetting ? rulesSetting : 'helmand';
     },
 
     resetApp() {

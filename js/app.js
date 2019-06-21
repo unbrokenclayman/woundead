@@ -13,6 +13,7 @@ Vue.create({
   data: {
     isDead: false,
     skin: 'marine',
+    rules: 'helmand',
   },
   components: {
     HumanBody,
