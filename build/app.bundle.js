@@ -11332,8 +11332,8 @@ return Vue$3;
   },
 
   methods: {
-    addWound() {
-      if (this.$root.timeEditorShown) return;
+    addWound(byClick = false) {
+      if (this.$root.timeEditorShown && byClick) return;
       if (this.woundState < this.hitpointsWithArmor + 1) {
         this.woundState += this.armorDestroyed ? 2 : 1;
       }
@@ -13193,7 +13193,11 @@ var render = function() {
         "body-part--seriously-wounded": _vm.isSeriouslyWounded,
         "body-part--deadly-wounded": _vm.isDeadlyWounded
       },
-      on: { click: _vm.addWound }
+      on: {
+        click: function($event) {
+          _vm.addWound(true)
+        }
+      }
     },
     [
       _vm.stabilizationTimer
@@ -13389,7 +13393,11 @@ var render = function() {
           "body-part--deadly-wounded": _vm.isDeadlyWounded
         }
       ],
-      on: { click: _vm.addWound }
+      on: {
+        click: function($event) {
+          _vm.addWound(true)
+        }
+      }
     },
     [
       _vm.stabilizationTimer
@@ -13694,7 +13702,11 @@ var render = function() {
         "body-part--seriously-wounded": _vm.isSeriouslyWounded,
         "body-part--deadly-wounded": _vm.isDeadlyWounded
       },
-      on: { click: _vm.addWound }
+      on: {
+        click: function($event) {
+          _vm.addWound(true)
+        }
+      }
     },
     [
       _vm.stabilizationTimer
@@ -13893,7 +13905,11 @@ var render = function() {
           "body-part--deadly-wounded": _vm.isDeadlyWounded
         }
       ],
-      on: { click: _vm.addWound }
+      on: {
+        click: function($event) {
+          _vm.addWound(true)
+        }
+      }
     },
     [
       _vm.stabilizationTimer

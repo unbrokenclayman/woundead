@@ -85,8 +85,8 @@ export default {
   },
 
   methods: {
-    addWound() {
-      if (this.$root.timeEditorShown) return;
+    addWound(byClick = false) {
+      if (this.$root.timeEditorShown && byClick) return;
       if (this.woundState < this.hitpointsWithArmor + 1) {
         this.woundState += this.armorDestroyed ? 2 : 1;
       }
