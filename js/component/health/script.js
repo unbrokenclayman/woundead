@@ -17,6 +17,7 @@ export default {
       stunTimeLeft: null,
       lastTickTime: false,
       stunLastTickTime: false,
+      isStabilized: false,
     }
   },
 
@@ -46,7 +47,8 @@ export default {
     },
 
     isEasilyWounded() {
-      if (this.easyWounds) return true;
+      if (this.easyWounds && !this.isSeriouslyWounded) return true;
+      return false;
     },
 
     statusText() {
@@ -70,15 +72,26 @@ export default {
       return this.millisecondsToTime(this.stunTimeLeft);
     },
 
+    woundsCanBeStabilized() {
+      return this.rules.WOUNDS_CAN_BE_STABILIZED;
+    },
+
     rules() {
-      return this.$root.rules;
+      return rules[this.$root.rules];
+    },
+
+    firstAidAvailable() {
+      return this.isEasilyWounded && !this.firstAidGiven ||
+        this.isEasilyWounded && this.woundsCanBeStabilized ||
+        this.isSeriouslyWounded && this.firstAidPoints > 0 ||
+        this.isSeriouslyWounded && this.woundsCanBeStabilized && !this.isStabilized;
     },
   },
 
   watch: {
     isStunned(newValue) {
       if (newValue == true) {
-        this.startStunTimer(rules[this.rules].CONTUSION_TIME);
+        this.startStunTimer(this.rules.CONTUSION_TIME);
       }
     }
   },
@@ -86,10 +99,21 @@ export default {
   methods: {
     giveFirstAid() {
       if (this.isSeriouslyWounded) {
-        console.log(this.firstAidPoints);
         if (this.firstAidPoints > 0) {
-          this.addTimeToWoundTimer(rules[this.rules].SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
+          if (this.rules.STABILIZATION_TYPE == 'add') {
+            this.addTimeToWoundTimer(this.rules.SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
+          }
+          if (this.rules.STABILIZATION_TYPE == 'reset') {
+            this.resetWoundTimer();
+            this.startWoundTimer(this.rules.SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
+          }
           this.firstAidPoints -= 1;
+        } else {
+          if (this.woundsCanBeStabilized && !this.isStabilized) {
+            this.isStabilized = true;
+            this.resetWoundTimer();
+            this.startWoundTimer(this.rules.EVACUATION_TIME);
+          }
         }
       }
       this.firstAidGiven = true;
@@ -180,8 +204,8 @@ export default {
         this.$root.$emit('die');
         return;
       }
-      if (self.isSeriouslyWounded && self.isEasilyWounded) {
-        self.startWoundTimer(rules[this.rules].SERIOUS_WOUND_STABILIZATION_TIME);
+      if (self.isSeriouslyWounded && !self.seriousWounds) {
+        self.startWoundTimer(this.rules.SERIOUS_WOUND_STABILIZATION_TIME);
       }
     });
 
@@ -193,7 +217,7 @@ export default {
 
   created() {
     this.$nextTick(() => {
-      this.firstAidPoints = rules[this.rules].FIRST_AID_POINTS;
+      this.firstAidPoints = this.rules.FIRST_AID_POINTS;
     });
   },
 };

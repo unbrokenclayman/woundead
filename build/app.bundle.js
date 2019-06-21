@@ -11270,7 +11270,8 @@ return Vue$3;
       stabilizationTimer: null,
       stabilizationTimeLeft: null,
       timeEditorShown: false,
-      lastTickTime: false
+      lastTickTime: false,
+      isStabilized: false
     };
   },
 
@@ -11311,8 +11312,16 @@ return Vue$3;
       return this.millisecondsToTime(this.stabilizationTimeLeft);
     },
 
+    woundsCanBeStabilized() {
+      return this.rules.WOUNDS_CAN_BE_STABILIZED;
+    },
+
     rules() {
-      return this.$root.rules;
+      return __WEBPACK_IMPORTED_MODULE_0_js_config_js__["a" /* rules */][this.$root.rules];
+    },
+
+    firstAidAvailable() {
+      return this.isEasilyWounded && !this.firstAidGiven || this.isEasilyWounded && this.woundsCanBeStabilized || this.isSeriouslyWounded && this.firstAidPoints > 0 || this.isSeriouslyWounded && this.woundsCanBeStabilized && !this.isStabilized;
     }
   },
 
@@ -11325,9 +11334,9 @@ return Vue$3;
       this.resetWoundTimer();
       if (!this.isDeadlyWounded && !this.$root.isDead && (this.isEasilyWounded || this.isSeriouslyWounded)) {
         if (this.isSeriouslyWounded) {
-          this.startWoundTimer(__WEBPACK_IMPORTED_MODULE_0_js_config_js__["a" /* rules */][this.rules].SERIOUS_WOUND_STABILIZATION_TIME);
+          this.startWoundTimer(this.rules.SERIOUS_WOUND_STABILIZATION_TIME);
         } else {
-          this.startWoundTimer(__WEBPACK_IMPORTED_MODULE_0_js_config_js__["a" /* rules */][this.rules].EASY_WOUND_STABILIZATION_TIME);
+          this.startWoundTimer(this.rules.EASY_WOUND_STABILIZATION_TIME);
         }
       }
       this.armorDestroyed = this.hasArmor ? true : false;
@@ -11346,15 +11355,31 @@ return Vue$3;
       if (this.isEasilyWounded) {
         if (!this.firstAidGiven) {
           this.resetWoundTimer();
-          if (__WEBPACK_IMPORTED_MODULE_0_js_config_js__["a" /* rules */][this.rules].EASY_WOUND_BLEEDING_TIME_AFTER_FIRST_AID) {
-            this.startWoundTimer(__WEBPACK_IMPORTED_MODULE_0_js_config_js__["a" /* rules */][this.rules].EASY_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
+          if (this.rules.EASY_WOUND_BLEEDING_TIME_AFTER_FIRST_AID) {
+            this.startWoundTimer(this.rules.EASY_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
+          }
+        } else {
+          if (this.woundsCanBeStabilized) {
+            this.resetWoundTimer();
           }
         }
       }
       if (this.isSeriouslyWounded) {
         if (this.firstAidPoints > 0) {
-          this.addTimeToWoundTimer(__WEBPACK_IMPORTED_MODULE_0_js_config_js__["a" /* rules */][this.rules].SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
+          if (this.rules.STABILIZATION_TYPE == 'add') {
+            this.addTimeToWoundTimer(this.rules.SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
+          }
+          if (this.rules.STABILIZATION_TYPE == 'reset') {
+            this.resetWoundTimer();
+            this.startWoundTimer(this.rules.SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
+          }
           this.firstAidPoints -= 1;
+        } else {
+          if (this.woundsCanBeStabilized && !this.isStabilized) {
+            this.isStabilized = true;
+            this.resetWoundTimer();
+            this.startWoundTimer(this.rules.EVACUATION_TIME);
+          }
         }
       }
       this.firstAidGiven = true;
@@ -11419,7 +11444,7 @@ return Vue$3;
 
   created() {
     this.$nextTick(() => {
-      this.firstAidPoints = __WEBPACK_IMPORTED_MODULE_0_js_config_js__["a" /* rules */][this.rules].FIRST_AID_POINTS;
+      this.firstAidPoints = this.rules.FIRST_AID_POINTS;
     });
   }
 });
@@ -11516,14 +11541,18 @@ const rules = {
     SERIOUS_WOUND_STABILIZATION_TIME: 10 * 60 * 1000,
     EASY_WOUND_BLEEDING_TIME_AFTER_FIRST_AID: 30 * 60 * 1000,
     SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID: 20 * 60 * 1000,
+    STABILIZATION_TYPE: 'add',
     FIRST_AID_POINTS: 3,
     CONTUSION_TIME: 10 * 1000
   },
   desertThunder: {
     EASY_WOUND_STABILIZATION_TIME: 5 * 60 * 1000,
     SERIOUS_WOUND_STABILIZATION_TIME: 15 * 60 * 1000,
-    EASY_WOUND_BLEEDING_TIME_AFTER_FIRST_AID: 0 * 60 * 1000,
-    SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID: 60 * 60 * 1000,
+    EASY_WOUND_BLEEDING_TIME_AFTER_FIRST_AID: 60 * 60 * 1000,
+    SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID: 15 * 60 * 1000,
+    EVACUATION_TIME: 60 * 60 * 1000,
+    WOUNDS_CAN_BE_STABILIZED: true,
+    STABILIZATION_TYPE: 'reset',
     FIRST_AID_POINTS: 1,
     CONTUSION_TIME: 5 * 60 * 1000
   }
@@ -11694,7 +11723,8 @@ const rules = {
       stunTimer: null,
       stunTimeLeft: null,
       lastTickTime: false,
-      stunLastTickTime: false
+      stunLastTickTime: false,
+      isStabilized: false
     };
   },
 
@@ -11717,7 +11747,8 @@ const rules = {
     },
 
     isEasilyWounded() {
-      if (this.easyWounds) return true;
+      if (this.easyWounds && !this.isSeriouslyWounded) return true;
+      return false;
     },
 
     statusText() {
@@ -11741,15 +11772,23 @@ const rules = {
       return this.millisecondsToTime(this.stunTimeLeft);
     },
 
+    woundsCanBeStabilized() {
+      return this.rules.WOUNDS_CAN_BE_STABILIZED;
+    },
+
     rules() {
-      return this.$root.rules;
+      return __WEBPACK_IMPORTED_MODULE_0_js_config_js__["a" /* rules */][this.$root.rules];
+    },
+
+    firstAidAvailable() {
+      return this.isEasilyWounded && !this.firstAidGiven || this.isEasilyWounded && this.woundsCanBeStabilized || this.isSeriouslyWounded && this.firstAidPoints > 0 || this.isSeriouslyWounded && this.woundsCanBeStabilized && !this.isStabilized;
     }
   },
 
   watch: {
     isStunned(newValue) {
       if (newValue == true) {
-        this.startStunTimer(__WEBPACK_IMPORTED_MODULE_0_js_config_js__["a" /* rules */][this.rules].CONTUSION_TIME);
+        this.startStunTimer(this.rules.CONTUSION_TIME);
       }
     }
   },
@@ -11757,10 +11796,21 @@ const rules = {
   methods: {
     giveFirstAid() {
       if (this.isSeriouslyWounded) {
-        console.log(this.firstAidPoints);
         if (this.firstAidPoints > 0) {
-          this.addTimeToWoundTimer(__WEBPACK_IMPORTED_MODULE_0_js_config_js__["a" /* rules */][this.rules].SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
+          if (this.rules.STABILIZATION_TYPE == 'add') {
+            this.addTimeToWoundTimer(this.rules.SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
+          }
+          if (this.rules.STABILIZATION_TYPE == 'reset') {
+            this.resetWoundTimer();
+            this.startWoundTimer(this.rules.SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
+          }
           this.firstAidPoints -= 1;
+        } else {
+          if (this.woundsCanBeStabilized && !this.isStabilized) {
+            this.isStabilized = true;
+            this.resetWoundTimer();
+            this.startWoundTimer(this.rules.EVACUATION_TIME);
+          }
         }
       }
       this.firstAidGiven = true;
@@ -11851,8 +11901,8 @@ const rules = {
         this.$root.$emit('die');
         return;
       }
-      if (self.isSeriouslyWounded && self.isEasilyWounded) {
-        self.startWoundTimer(__WEBPACK_IMPORTED_MODULE_0_js_config_js__["a" /* rules */][this.rules].SERIOUS_WOUND_STABILIZATION_TIME);
+      if (self.isSeriouslyWounded && !self.seriousWounds) {
+        self.startWoundTimer(this.rules.SERIOUS_WOUND_STABILIZATION_TIME);
       }
     });
 
@@ -11864,7 +11914,7 @@ const rules = {
 
   created() {
     this.$nextTick(() => {
-      this.firstAidPoints = __WEBPACK_IMPORTED_MODULE_0_js_config_js__["a" /* rules */][this.rules].FIRST_AID_POINTS;
+      this.firstAidPoints = this.rules.FIRST_AID_POINTS;
     });
   }
 });
@@ -12016,6 +12066,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.create({
       clearInterval(this.$refs.status.stunTimer);
       this.$refs.status.stunTimeLeft = null;
       this.$refs.status.stunTimer = null;
+      this.$refs.status.isStabilized = false;
       this.$refs.body.$refs.head.woundState = 0;
       this.$refs.body.$refs.head.firstAidGiven = false;
       this.$refs.body.$refs.head.firstAidPoints = 3;
@@ -12023,18 +12074,21 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.create({
       this.$refs.body.$refs.head.armorDestroyed = false;
       this.$refs.body.$refs.head.resetWoundTimer();
       this.$refs.body.$refs.head.stabilizationTimer = null;
+      this.$refs.body.$refs.head.isStabilized = false;
       this.$refs.body.$refs.leftArm.woundState = 0;
       this.$refs.body.$refs.leftArm.firstAidGiven = false;
       this.$refs.body.$refs.leftArm.firstAidPoints = 3;
       this.$refs.body.$refs.leftArm.timeEditorShown = false;
       this.$refs.body.$refs.leftArm.resetWoundTimer();
       this.$refs.body.$refs.leftArm.stabilizationTimer = null;
+      this.$refs.body.$refs.leftArm.isStabilized = false;
       this.$refs.body.$refs.rightArm.woundState = 0;
       this.$refs.body.$refs.rightArm.firstAidGiven = false;
       this.$refs.body.$refs.rightArm.firstAidPoints = 3;
       this.$refs.body.$refs.rightArm.timeEditorShown = false;
       this.$refs.body.$refs.rightArm.resetWoundTimer();
       this.$refs.body.$refs.rightArm.stabilizationTimer = null;
+      this.$refs.body.$refs.rightArm.isStabilized = false;
       this.$refs.body.$refs.torso.woundState = 0;
       this.$refs.body.$refs.torso.firstAidGiven = false;
       this.$refs.body.$refs.torso.firstAidPoints = 3;
@@ -12042,18 +12096,21 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.create({
       this.$refs.body.$refs.torso.armorDestroyed = false;
       this.$refs.body.$refs.torso.resetWoundTimer();
       this.$refs.body.$refs.torso.stabilizationTimer = null;
+      this.$refs.body.$refs.torso.isStabilized = false;
       this.$refs.body.$refs.leftLeg.woundState = 0;
       this.$refs.body.$refs.leftLeg.firstAidGiven = false;
       this.$refs.body.$refs.leftLeg.firstAidPoints = 3;
       this.$refs.body.$refs.leftLeg.timeEditorShown = false;
       this.$refs.body.$refs.leftLeg.resetWoundTimer();
       this.$refs.body.$refs.leftLeg.stabilizationTimer = null;
+      this.$refs.body.$refs.leftLeg.isStabilized = false;
       this.$refs.body.$refs.rightLeg.woundState = 0;
       this.$refs.body.$refs.rightLeg.firstAidGiven = false;
       this.$refs.body.$refs.rightLeg.firstAidPoints = 3;
       this.$refs.body.$refs.rightLeg.timeEditorShown = false;
       this.$refs.body.$refs.rightLeg.resetWoundTimer();
       this.$refs.body.$refs.rightLeg.stabilizationTimer = null;
+      this.$refs.body.$refs.rightLeg.isStabilized = false;
     }
   }
 });
@@ -13157,11 +13214,8 @@ var render = function() {
                   {
                     name: "show",
                     rawName: "v-show",
-                    value:
-                      (_vm.isEasilyWounded && !_vm.firstAidGiven) ||
-                      (_vm.isSeriouslyWounded && _vm.firstAidPoints > 0),
-                    expression:
-                      "isEasilyWounded && !firstAidGiven || isSeriouslyWounded && firstAidPoints > 0"
+                    value: _vm.firstAidAvailable,
+                    expression: "firstAidAvailable"
                   }
                 ],
                 staticClass: "first-aid-icon"
@@ -13356,11 +13410,8 @@ var render = function() {
                   {
                     name: "show",
                     rawName: "v-show",
-                    value:
-                      (_vm.isEasilyWounded && !_vm.firstAidGiven) ||
-                      (_vm.isSeriouslyWounded && _vm.firstAidPoints > 0),
-                    expression:
-                      "isEasilyWounded && !firstAidGiven || isSeriouslyWounded && firstAidPoints > 0"
+                    value: _vm.firstAidAvailable,
+                    expression: "firstAidAvailable"
                   }
                 ],
                 staticClass: "first-aid-icon"
@@ -13664,11 +13715,8 @@ var render = function() {
                   {
                     name: "show",
                     rawName: "v-show",
-                    value:
-                      (_vm.isEasilyWounded && !_vm.firstAidGiven) ||
-                      (_vm.isSeriouslyWounded && _vm.firstAidPoints > 0),
-                    expression:
-                      "isEasilyWounded && !firstAidGiven || isSeriouslyWounded && firstAidPoints > 0"
+                    value: _vm.firstAidAvailable,
+                    expression: "firstAidAvailable"
                   }
                 ],
                 staticClass: "first-aid-icon"
@@ -13866,11 +13914,8 @@ var render = function() {
                   {
                     name: "show",
                     rawName: "v-show",
-                    value:
-                      (_vm.isEasilyWounded && !_vm.firstAidGiven) ||
-                      (_vm.isSeriouslyWounded && _vm.firstAidPoints > 0),
-                    expression:
-                      "isEasilyWounded && !firstAidGiven || isSeriouslyWounded && firstAidPoints > 0"
+                    value: _vm.firstAidAvailable,
+                    expression: "firstAidAvailable"
                   }
                 ],
                 staticClass: "first-aid-icon"
@@ -14064,11 +14109,8 @@ var render = function() {
                 {
                   name: "show",
                   rawName: "v-show",
-                  value:
-                    (_vm.isEasilyWounded && !_vm.firstAidGiven) ||
-                    (_vm.isSeriouslyWounded && _vm.firstAidPoints > 0),
-                  expression:
-                    "isEasilyWounded && !firstAidGiven || isSeriouslyWounded && firstAidPoints > 0"
+                  value: _vm.firstAidAvailable,
+                  expression: "firstAidAvailable"
                 }
               ],
               staticClass: "first-aid-icon"
