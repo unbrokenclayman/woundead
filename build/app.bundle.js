@@ -11325,8 +11325,15 @@ return Vue$3;
     }
   },
 
+  watch: {
+    timeEditorShown(newValue) {
+      this.$root.timeEditorShown = newValue;
+    }
+  },
+
   methods: {
     addWound() {
+      if (this.$root.timeEditorShown) return;
       if (this.woundState < this.hitpointsWithArmor + 1) {
         this.woundState += this.armorDestroyed ? 2 : 1;
       }
@@ -11352,6 +11359,7 @@ return Vue$3;
     },
 
     giveFirstAid() {
+      if (this.$root.timeEditorShown) return;
       if (this.isEasilyWounded) {
         if (!this.firstAidGiven) {
           this.resetWoundTimer();
@@ -11795,6 +11803,7 @@ const rules = {
 
   methods: {
     giveFirstAid() {
+      if (this.$root.timeEditorShown) return;
       if (this.isSeriouslyWounded) {
         if (this.firstAidPoints > 0) {
           if (this.rules.STABILIZATION_TYPE == 'add') {
@@ -12042,7 +12051,8 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.create({
   data: {
     isDead: false,
     skin: 'marine',
-    rules: 'helmand'
+    rules: 'helmand',
+    timeEditorShown: false
   },
   components: {
     HumanBody: __WEBPACK_IMPORTED_MODULE_2__component_body_body_vue__["a" /* default */],

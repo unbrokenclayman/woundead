@@ -78,8 +78,15 @@ export default {
     },
   },
 
+  watch: {
+    timeEditorShown(newValue) {
+      this.$root.timeEditorShown = newValue;
+    }
+  },
+
   methods: {
     addWound() {
+      if (this.$root.timeEditorShown) return;
       if (this.woundState < this.hitpointsWithArmor + 1) {
         this.woundState += this.armorDestroyed ? 2 : 1;
       }
@@ -108,6 +115,7 @@ export default {
     },
 
     giveFirstAid() {
+      if (this.$root.timeEditorShown) return;
       if (this.isEasilyWounded) {
         if (!this.firstAidGiven) {
           this.resetWoundTimer();

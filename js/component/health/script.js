@@ -98,6 +98,7 @@ export default {
 
   methods: {
     giveFirstAid() {
+      if (this.$root.timeEditorShown) return;
       if (this.isSeriouslyWounded) {
         if (this.firstAidPoints > 0) {
           if (this.rules.STABILIZATION_TYPE == 'add') {

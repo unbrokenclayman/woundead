@@ -14,6 +14,7 @@ Vue.create({
     isDead: false,
     skin: 'marine',
     rules: 'helmand',
+    timeEditorShown: false,
   },
   components: {
     HumanBody,
