@@ -45,6 +45,17 @@
   top: 50%;
   transform: translateY(-50%);
   white-space: nowrap;
+  min-width: 50px;
+}
+
+.body-part__first-aid-icons {
+  position: absolute;
+  left: 0; top: 100%;
+  margin-top: 10px;
+
+  i + i {
+    margin-left: 0;
+  }
 }
 
 .first-aid-icon {
@@ -81,7 +92,6 @@
   text-align: center;
   width: 20px; height: 20px;
   background: url(../../../img/bandage-icon.png) no-repeat 50% / contain;
-  margin-left: 5px;
   margin-top: -6px;
   margin-bottom: -3px;
 }
@@ -92,7 +102,6 @@
   text-align: center;
   width: 20px; height: 20px;
   background: url(../../../img/transfusion-icon.png) no-repeat 50% / contain;
-  margin-left: 5px;
   margin-top: -6px;
   margin-bottom: -3px;
 }

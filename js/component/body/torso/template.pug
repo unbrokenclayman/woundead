@@ -1,7 +1,8 @@
 .body-part.body-part--torso(@click="addWound(true)" :class="{ 'body-part--has-armor': hasArmor, 'body-part--easily-wounded': isEasilyWounded, 'body-part--seriously-wounded': isSeriouslyWounded, 'body-part--deadly-wounded': isDeadlyWounded }")
   .body-part__timer(v-if="stabilizationTimer" @click.stop="giveFirstAid" v-long-press="500" @long-press-start="toggleTimeEditor") {{ stabilizationTimeLeftFormatted }}
     i.first-aid-icon(v-show="firstAidAvailable")
-    i.first-aid-given-icon(v-show="firstAidGiven")
-    i.stabilized-icon(v-show="isStabilized")
+    .body-part__first-aid-icons
+      i.first-aid-given-icon(v-show="firstAidGiven")
+      i.stabilized-icon(v-show="isStabilized")
   time-editor
   i.broken-armor-icon(v-if="armorDestroyed")

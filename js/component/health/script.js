@@ -44,10 +44,137 @@ export default {
     isSeriouslyWounded() {
       if (this.seriousWounds) return true;
       if (this.easyWounds > 2) return true;
+      return false;
     },
 
     isEasilyWounded() {
       if (this.easyWounds && !this.isSeriouslyWounded) return true;
+      return false;
+    },
+
+    isOneHandInvalid() {
+      if (this.isTwoHandsInvalid) {
+        return false;
+      }
+      if (
+        this.$root.$refs.body.$refs.leftArm.isEasilyWounded ||
+        this.$root.$refs.body.$refs.rightArm.isEasilyWounded
+      ) {
+        return true;
+      }
+      return false;
+    },
+
+    isTwoHandsInvalid() {
+      if (
+        this.$root.$refs.body.$refs.leftArm.isEasilyWounded &&
+        this.$root.$refs.body.$refs.rightArm.isEasilyWounded &&
+        !(
+          this.$root.$refs.body.$refs.leftArm.isStabilized ||
+          this.$root.$refs.body.$refs.rightArm.isStabilized
+        )
+      ) {
+        return true;
+      }
+      return false;
+    },
+
+    handsAreBandaged() {
+      if (this.isOneHandInvalid || this.isTwoHandsInvalid) {
+        if ((
+            this.$root.$refs.body.$refs.leftArm.isHealthly ||
+            this.$root.$refs.body.$refs.leftArm.isEasilyWounded &&
+            this.$root.$refs.body.$refs.leftArm.firstAidGiven
+          ) && (
+            this.$root.$refs.body.$refs.rightArm.isHealthly ||
+            this.$root.$refs.body.$refs.rightArm.isEasilyWounded &&
+            this.$root.$refs.body.$refs.rightArm.firstAidGiven
+          )
+        ) {
+          return true;
+        }
+      }
+      return false;
+    },
+
+    handsAreCured() {
+      if (this.isOneHandInvalid || this.isTwoHandsInvalid) {
+        if ((
+            this.$root.$refs.body.$refs.leftArm.isHealthly ||
+            this.$root.$refs.body.$refs.leftArm.isEasilyWounded &&
+            this.$root.$refs.body.$refs.leftArm.isStabilized
+          ) && (
+            this.$root.$refs.body.$refs.rightArm.isHealthly ||
+            this.$root.$refs.body.$refs.rightArm.isEasilyWounded &&
+            this.$root.$refs.body.$refs.rightArm.isStabilized
+          )
+        ) {
+          return true;
+        }
+      }
+      return false;
+    },
+
+    isOneLegInvalid() {
+      if (this.isTwoLegsInvalid) {
+        return false;
+      }
+      if (
+        this.$root.$refs.body.$refs.leftLeg.isEasilyWounded ||
+        this.$root.$refs.body.$refs.rightLeg.isEasilyWounded
+      ) {
+        return true;
+      }
+      return false;
+    },
+
+    isTwoLegsInvalid() {
+      if (
+        this.$root.$refs.body.$refs.leftLeg.isEasilyWounded &&
+        this.$root.$refs.body.$refs.rightLeg.isEasilyWounded &&
+        !(
+          this.$root.$refs.body.$refs.leftLeg.isStabilized ||
+          this.$root.$refs.body.$refs.rightLeg.isStabilized
+        )
+      ) {
+        return true;
+      }
+      return false;
+    },
+
+    legsAreBandaged() {
+      if (this.isOneLegInvalid || this.isTwoLegsInvalid) {
+        if ((
+            this.$root.$refs.body.$refs.leftLeg.isHealthly ||
+            this.$root.$refs.body.$refs.leftLeg.isEasilyWounded &&
+            this.$root.$refs.body.$refs.leftLeg.firstAidGiven
+          ) && (
+            this.$root.$refs.body.$refs.rightLeg.isHealthly ||
+            this.$root.$refs.body.$refs.rightLeg.isEasilyWounded &&
+            this.$root.$refs.body.$refs.rightLeg.firstAidGiven
+          )
+        ) {
+          return true;
+        }
+      }
+      return false;
+    },
+
+    legsAreCured() {
+      if (this.isOneLegInvalid || this.isTwoLegsInvalid) {
+        if ((
+            this.$root.$refs.body.$refs.leftLeg.isHealthly ||
+            this.$root.$refs.body.$refs.leftLeg.isEasilyWounded &&
+            this.$root.$refs.body.$refs.leftLeg.isStabilized
+          ) && (
+            this.$root.$refs.body.$refs.rightLeg.isHealthly ||
+            this.$root.$refs.body.$refs.rightLeg.isEasilyWounded &&
+            this.$root.$refs.body.$refs.rightLeg.isStabilized
+          )
+        ) {
+          return true;
+        }
+      }
       return false;
     },
 
@@ -62,6 +189,41 @@ export default {
         return 'status: easy wounds';
       }
       return 'status: healthy';
+    },
+
+    restrictionsText() {
+      let text = '';
+      if (this.isSeriouslyWounded) {
+        text += this.rules.SERIOUS_WOUND_RESTRICTIONS;
+      } else {
+        if (this.isOneHandInvalid && !this.handsAreBandaged && !this.handsAreCured) {
+          text += this.rules.HAND_WOUND_RESTRICTIONS;
+        }
+        if ((this.isOneHandInvalid || this.isTwoHandsInvalid) && this.handsAreBandaged && !this.handsAreCured) {
+          if (this.isOneHandInvalid) {
+            text += this.rules.HANDS_BANDAGE_RESTRICTIONS;
+          }
+        }
+        if (this.isTwoHandsInvalid && !this.handsAreCured) {
+          text += this.rules.TWO_HANDS_WOUND_RESTRICTIONS;
+        }
+        if (this.isTwoLegsInvalid && !this.legsAreBandaged && !this.LegsAreCured) {
+          text += this.rules.TWO_LEGS_WOUND_RESTRICTIONS;
+        } else {
+          if ((this.isOneLegInvalid || this.isTwoLegsInvalid) && !this.legsAreBandaged && !this.legsAreCured) {
+            text += this.rules.LEG_WOUND_RESTRICTIONS;
+          }
+          if ((this.isOneLegInvalid || this.isTwoLegsInvalid) && this.legsAreBandaged && !this.legsAreCured) {
+            if (this.isOneLegInvalid) {
+              text += this.rules.ONE_LEG_BANDAGE_RESTRICTIONS;
+            }
+            if (this.isTwoLegsInvalid) {
+              text += this.rules.TWO_LEGS_BANDAGE_RESTRICTIONS;
+            }
+          }
+        }
+      }
+      return text;
     },
 
     stabilizationTimeLeftFormatted() {
