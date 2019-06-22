@@ -59,7 +59,7 @@ export default {
     },
 
     stabilizationTimeLeftFormatted() {
-      return this.millisecondsToTime(this.stabilizationTimeLeft);
+      return this.stabilizationTimeLeft ? this.millisecondsToTime(this.stabilizationTimeLeft) : '';
     },
 
     woundsCanBeStabilized() {
@@ -72,7 +72,7 @@ export default {
 
     firstAidAvailable() {
       return this.isEasilyWounded && !this.firstAidGiven ||
-        this.isEasilyWounded && this.woundsCanBeStabilized ||
+        this.isEasilyWounded && this.woundsCanBeStabilized && !this.isStabilized ||
         this.isSeriouslyWounded && this.firstAidPoints > 0 ||
         this.isSeriouslyWounded && this.woundsCanBeStabilized && !this.isStabilized;
     },
@@ -124,12 +124,16 @@ export default {
           }
         } else {
           if (this.woundsCanBeStabilized) {
+            this.isStabilized = true;
             this.resetWoundTimer();
           }
         }
       }
       if (this.isSeriouslyWounded) {
         if (this.firstAidPoints > 0) {
+          if (this.firstAidGiven) {
+            this.isStabilized = true;
+          }
           if (this.rules.STABILIZATION_TYPE == 'add') {
             this.addTimeToWoundTimer(this.rules.SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
           }

@@ -2,4 +2,6 @@ div.wound-status
   div.health-status(:class="{ 'health-status--easy-wounds': isEasilyWounded, 'health-status--serious-wounds': isSeriouslyWounded, 'health-status--deadly-wounds': isDead }") {{ statusText }}
   .wound-timer(v-if="stabilizationTimer" @click.stop="giveFirstAid") {{ stabilizationTimeLeftFormatted }}
     i.first-aid-icon(v-show="firstAidAvailable")
+    i.first-aid-given-icon(v-show="firstAidGiven")
+    i.stabilized-icon(v-show="isStabilized")
   i.stunned-icon(v-if="isStunned") contusion {{ stunTimeLeftFormatted }}

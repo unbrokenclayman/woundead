@@ -101,6 +101,9 @@ export default {
       if (this.$root.timeEditorShown) return;
       if (this.isSeriouslyWounded) {
         if (this.firstAidPoints > 0) {
+          if (this.firstAidGiven) {
+            this.isStabilized = true;
+          }
           if (this.rules.STABILIZATION_TYPE == 'add') {
             this.addTimeToWoundTimer(this.rules.SERIOUS_WOUND_BLEEDING_TIME_AFTER_FIRST_AID);
           }
