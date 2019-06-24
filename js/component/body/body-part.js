@@ -21,6 +21,7 @@ export default {
       timeEditorShown: false,
       lastTickTime: false,
       isStabilized: false,
+      timerFor: 'stabilization',
     }
   },
 
@@ -197,7 +198,8 @@ export default {
       return (hours ? hours + ':' : '') + minutes + ':' + seconds;
     },
 
-    toggleTimeEditor() {
+    toggleTimeEditor(timerFor = 'stabilization') {
+      this.timerFor = timerFor;
       this.timeEditorShown = !this.timeEditorShown;
     },
   },

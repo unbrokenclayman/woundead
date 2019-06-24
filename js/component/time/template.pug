@@ -3,5 +3,5 @@ div.time-widget(v-show="this.$parent.timeEditorShown" @click.stop="")
     button.settings-window__close(@click="toggleTimeEditor")
     div.spinner
       button.spinner__down(@click="decreaseTime(30)")
-      input.spinner__inp(v-model="this.$parent.stabilizationTimeLeftFormatted" readonly)
+      input.spinner__inp(v-model="timeFormatted" readonly)
       button.spinner__up(@click="increaseTime(30)")

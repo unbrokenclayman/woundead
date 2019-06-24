@@ -5,6 +5,6 @@ div.wound-status
     .healts-status__first-aid-icons
       i.first-aid-given-icon(v-show="firstAidGiven")
       i.stabilized-icon(v-show="isStabilized")
-  i.stunned-icon(v-if="isStunned && !isDead") contusion {{ stunTimeLeftFormatted }}
+  i.stunned-icon(v-if="isStunned && !isDead" v-longclick="() => toggleTimeEditor('stun')") contusion {{ stunTimeLeftFormatted }}
   div.restrictions-text(v-if="!isDead" v-html="restrictionsText")
   time-editor

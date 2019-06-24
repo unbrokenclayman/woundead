@@ -12534,7 +12534,8 @@ var _default = {
       stabilizationTimeLeft: null,
       timeEditorShown: false,
       lastTickTime: false,
-      isStabilized: false
+      isStabilized: false,
+      timerFor: 'stabilization'
     };
   },
   computed: {
@@ -12698,6 +12699,8 @@ var _default = {
       return (hours ? hours + ':' : '') + minutes + ':' + seconds;
     },
     toggleTimeEditor: function toggleTimeEditor() {
+      var timerFor = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'stabilization';
+      this.timerFor = timerFor;
       this.timeEditorShown = !this.timeEditorShown;
     }
   },
@@ -13115,20 +13118,61 @@ Object.defineProperty(exports, "__esModule", {
 exports["default"] = void 0;
 var _default = {
   name: 'time-edit',
+  computed: {
+    timer: {
+      get: function get() {
+        switch (this.$parent.timerFor) {
+          case 'stabilization':
+            return this.$parent.stabilizationTimeLeft;
+
+          case 'stun':
+            return this.$parent.stunTimeLeft;
+        }
+
+        ;
+      },
+      set: function set(value) {
+        switch (this.$parent.timerFor) {
+          case 'stabilization':
+            this.$parent.stabilizationTimeLeft = value;
+            break;
+
+          case 'stun':
+            this.$parent.stunTimeLeft = value;
+            break;
+        }
+
+        ;
+      }
+    },
+    timeFormatted: function timeFormatted() {
+      switch (this.$parent.timerFor) {
+        case 'stabilization':
+          return this.$parent.stabilizationTimeLeftFormatted;
+
+        case 'stun':
+          return this.$parent.stunTimeLeftFormatted;
+      }
+
+      ;
+    }
+  },
   methods: {
     toggleTimeEditor: function toggleTimeEditor() {
+      var timerFor = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'stabilization';
+      this.$parent.timerFor = timerFor;
       this.$parent.toggleTimeEditor();
     },
     decreaseTime: function decreaseTime(seconds) {
-      var changedTime = this.$parent.stabilizationTimeLeft - seconds * 1000;
+      var changedTime = this.timer - seconds * 1000;
 
       if (changedTime > 0) {
-        this.$parent.stabilizationTimeLeft = changedTime;
+        this.timer = changedTime;
       }
     },
     increaseTime: function increaseTime(seconds) {
-      var changedTime = this.$parent.stabilizationTimeLeft + seconds * 1000;
-      this.$parent.stabilizationTimeLeft = changedTime;
+      var changedTime = this.timer + seconds * 1000;
+      this.timer = changedTime;
     }
   }
 };
@@ -13353,7 +13397,8 @@ var _default = {
       timeEditorShown: false,
       lastTickTime: false,
       stunLastTickTime: false,
-      isStabilized: false
+      isStabilized: false,
+      timerFor: 'stabilization'
     };
   },
   computed: {
@@ -13620,6 +13665,8 @@ var _default = {
       return (hours ? hours + ':' : '') + minutes + ':' + seconds;
     },
     toggleTimeEditor: function toggleTimeEditor() {
+      var timerFor = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'stabilization';
+      this.timerFor = timerFor;
       this.timeEditorShown = !this.timeEditorShown;
     }
   },
@@ -14833,23 +14880,19 @@ var render = function() {
               {
                 name: "model",
                 rawName: "v-model",
-                value: this.$parent.stabilizationTimeLeftFormatted,
-                expression: "this.$parent.stabilizationTimeLeftFormatted"
+                value: _vm.timeFormatted,
+                expression: "timeFormatted"
               }
             ],
             staticClass: "spinner__inp",
             attrs: { readonly: "readonly" },
-            domProps: { value: this.$parent.stabilizationTimeLeftFormatted },
+            domProps: { value: _vm.timeFormatted },
             on: {
               input: function($event) {
                 if ($event.target.composing) {
                   return
                 }
-                _vm.$set(
-                  this.$parent,
-                  "stabilizationTimeLeftFormatted",
-                  $event.target.value
-                )
+                _vm.timeFormatted = $event.target.value
               }
             }
           }),
@@ -16311,9 +16354,23 @@ var render = function() {
           )
         : _vm._e(),
       _vm.isStunned && !_vm.isDead
-        ? _c("i", { staticClass: "stunned-icon" }, [
-            _vm._v("contusion " + _vm._s(_vm.stunTimeLeftFormatted))
-          ])
+        ? _c(
+            "i",
+            {
+              directives: [
+                {
+                  name: "longclick",
+                  rawName: "v-longclick",
+                  value: function() {
+                    return _vm.toggleTimeEditor("stun")
+                  },
+                  expression: "() => toggleTimeEditor('stun')"
+                }
+              ],
+              staticClass: "stunned-icon"
+            },
+            [_vm._v("contusion " + _vm._s(_vm.stunTimeLeftFormatted))]
+          )
         : _vm._e(),
       !_vm.isDead
         ? _c("div", {
