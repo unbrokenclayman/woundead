@@ -11,21 +11,28 @@ Vue.create = obj => new Vue(obj);
 
 Vue.create({
   el: '#app',
+
   data: {
     isDead: false,
     skin: 'marine',
     rules: 'helmand',
     timeEditorShown: false,
+    isReady: false,
+    qrShown: false,
   },
+
   components: {
     HumanBody,
     HealthStatus,
     SettingsWidget,
   },
+
   methods: {
     reset() {
       // Все это мудацтво не нужно, оно только от срочности. Надо переписать на vuex.
       this.isDead = false;
+      this.qrShown = false;
+      this.timeEditorShown = false;
       this.$refs.status.easyWounds = 0;
       this.$refs.status.seriousWounds = 0;
       this.$refs.status.deadlyWounds = 0;
@@ -84,6 +91,14 @@ Vue.create({
       this.$refs.body.$refs.rightLeg.resetWoundTimer();
       this.$refs.body.$refs.rightLeg.stabilizationTimer = null;
       this.$refs.body.$refs.rightLeg.isStabilized = false;
-    }
+    },
+
+    toggleQr() {
+      this.qrShown = !this.qrShown;
+    },
+  },
+
+  mounted() {
+    this.isReady = true;
   },
 });

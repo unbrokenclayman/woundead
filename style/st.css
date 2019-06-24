@@ -372,3 +372,65 @@ html, body {
   font-family: sans-serif;
   font-size: 14px;
 }
+
+.loading-overlay {
+  position: fixed;
+  left: 0; top: 0;
+  z-index: 1000;
+  width: 100%; height: 100%;
+  background: #000;
+}
+
+.loading-overlay:after {
+  content: '';
+  display: block;
+  width: 100%; height: 100%;
+  position: absolute;
+  left: 0; top: 0;
+  background: linear-gradient(rgba(0,0,0,1) 0%, rgba(0,0,0,1) 99%, rgba(121,9,9,1) 100%);
+  animation: loading-animation forwards 5s ease;
+}
+
+.loading-overlay__logo {
+  position: absolute;
+  left: 50%; top: 40px;
+  transform: translateX(-50%);
+  z-index: 10;
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+@keyframes loading-animation {
+  0%   { background: linear-gradient(rgba(0,0,0,1) 0%, rgba(121,9,9,1) 100%); }
+  10%  { background: linear-gradient(rgba(0,0,0,1) 0%, rgba(0,0,0,1) 90%, rgba(121,9,9,1) 100%); }
+  20%  { background: linear-gradient(rgba(0,0,0,1) 0%, rgba(0,0,0,1) 80%, rgba(121,9,9,1) 100%); }
+  30%  { background: linear-gradient(rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(121,9,9,1) 100%); }
+  40%  { background: linear-gradient(rgba(0,0,0,1) 0%, rgba(0,0,0,1) 60%, rgba(121,9,9,1) 100%); }
+  50%  { background: linear-gradient(rgba(0,0,0,1) 0%, rgba(0,0,0,1) 50%, rgba(121,9,9,1) 100%); }
+  60%  { background: linear-gradient(rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(121,9,9,1) 100%); }
+  70%  { background: linear-gradient(rgba(0,0,0,1) 0%, rgba(0,0,0,1) 30%, rgba(121,9,9,1) 100%); }
+  80%  { background: linear-gradient(rgba(0,0,0,1) 0%, rgba(0,0,0,1) 20%, rgba(121,9,9,1) 100%); }
+  90%  { background: linear-gradient(rgba(0,0,0,1) 0%, rgba(0,0,0,1) 10%, rgba(121,9,9,1) 100%); }
+  100%  { background: linear-gradient(rgba(0,0,0,1) 0%, rgba(0,0,0,1) 0%, rgba(121,9,9,1) 100%); }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 1s ease;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+.qr-code {
+  position: fixed;
+  left: 10px; bottom: 10px;
+  width: 30px; height: 30px;
+  background: #fff url(../img/qrcode.png) no-repeat 50% / 60% auto;
+}
+
+.qr-code--shown {
+  width: 100%; height: 100%;
+  left: 0; bottom: 0;
+}

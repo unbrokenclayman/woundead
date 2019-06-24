@@ -13854,7 +13854,9 @@ _vue["default"].create({
     isDead: false,
     skin: 'marine',
     rules: 'helmand',
-    timeEditorShown: false
+    timeEditorShown: false,
+    isReady: false,
+    qrShown: false
   },
   components: {
     HumanBody: _body["default"],
@@ -13865,6 +13867,8 @@ _vue["default"].create({
     reset: function reset() {
       // Все это мудацтво не нужно, оно только от срочности. Надо переписать на vuex.
       this.isDead = false;
+      this.qrShown = false;
+      this.timeEditorShown = false;
       this.$refs.status.easyWounds = 0;
       this.$refs.status.seriousWounds = 0;
       this.$refs.status.deadlyWounds = 0;
@@ -13923,7 +13927,13 @@ _vue["default"].create({
       this.$refs.body.$refs.rightLeg.resetWoundTimer();
       this.$refs.body.$refs.rightLeg.stabilizationTimer = null;
       this.$refs.body.$refs.rightLeg.isStabilized = false;
+    },
+    toggleQr: function toggleQr() {
+      this.qrShown = !this.qrShown;
     }
+  },
+  mounted: function mounted() {
+    this.isReady = true;
   }
 });
 

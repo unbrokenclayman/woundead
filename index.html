@@ -11,6 +11,10 @@
   <health-status ref="status"></health-status>
   <settings-widget ref="settings"></settings-widget>
   <div class="death-overlay" v-if="isDead"><div class="death-overlay__content">DEAD</div></div>
+  <div class="qr-code" @click="toggleQr" :class="{'qr-code--shown': qrShown}"></div>
+  <transition name="fade">
+    <div class="loading-overlay" v-if="!isReady"><div class="loading-overlay__logo">WOUNDEAD</div></div>
+  </transition>
 </div>
 <script src="./build/app.bundle.js"></script>
 </body>
