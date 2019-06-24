@@ -1,7 +1,12 @@
 import { rules } from 'js/config.js';
+import TimeEditor from '../time/time.vue';
 
 export default {
   name: 'health-status',
+
+  components: {
+    TimeEditor,
+  },
 
   data() {
     return {
@@ -15,6 +20,7 @@ export default {
       stabilizationTimeLeft: null,
       stunTimer: null,
       stunTimeLeft: null,
+      timeEditorShown: false,
       lastTickTime: false,
       stunLastTickTime: false,
       isStabilized: false,
@@ -255,7 +261,11 @@ export default {
       if (newValue == true) {
         this.startStunTimer(this.rules.CONTUSION_TIME);
       }
-    }
+    },
+
+    timeEditorShown(newValue) {
+      this.$root.timeEditorShown = newValue;
+    },
   },
 
   methods: {
@@ -345,6 +355,10 @@ export default {
       seconds = (seconds < 10) ? '0' + seconds : seconds;
 
       return (hours ? hours + ':' : '') + minutes + ':' + seconds;
+    },
+
+    toggleTimeEditor() {
+      this.timeEditorShown = !this.timeEditorShown;
     },
   },
 

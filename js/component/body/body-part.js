@@ -1,5 +1,4 @@
 import { rules } from 'js/config.js';
-
 import TimeEditor from '../time/time.vue';
 
 export default {
@@ -81,7 +80,7 @@ export default {
   watch: {
     timeEditorShown(newValue) {
       this.$root.timeEditorShown = newValue;
-    }
+    },
   },
 
   methods: {

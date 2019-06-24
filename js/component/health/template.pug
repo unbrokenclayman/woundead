@@ -1,9 +1,10 @@
 div.wound-status
   div.health-status(:class="{ 'health-status--easy-wounds': isEasilyWounded, 'health-status--serious-wounds': isSeriouslyWounded, 'health-status--deadly-wounds': isDead }") {{ statusText }}
-  .wound-timer(v-if="stabilizationTimer" @click.stop="giveFirstAid") {{ stabilizationTimeLeftFormatted }}
+  .wound-timer(v-if="stabilizationTimer" @click.stop="giveFirstAid" v-longclick="toggleTimeEditor") {{ stabilizationTimeLeftFormatted }}
     i.first-aid-icon(v-show="firstAidAvailable")
     .healts-status__first-aid-icons
       i.first-aid-given-icon(v-show="firstAidGiven")
       i.stabilized-icon(v-show="isStabilized")
   i.stunned-icon(v-if="isStunned && !isDead") contusion {{ stunTimeLeftFormatted }}
   div.restrictions-text(v-if="!isDead" v-html="restrictionsText")
+  time-editor
