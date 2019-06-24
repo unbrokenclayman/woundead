@@ -1,10 +1,11 @@
 import Vue from 'vue';
-import LongPress from 'vue-directive-long-press';
 import HumanBody from './component/body/body.vue';
 import HealthStatus from './component/health/health.vue';
 import SettingsWidget from './component/settings/settings.vue';
+import { longClickDirective } from 'vue-long-click';
 
-Vue.directive('long-press', LongPress)
+const longClickInstance = longClickDirective({delay: 400, interval: 0});
+Vue.directive('longclick', longClickInstance);
 
 Vue.create = obj => new Vue(obj);
 

@@ -1,5 +1,5 @@
 .body-part.body-part--leg(@click="addWound(true)" :class="[ sideClass, { 'body-part--easily-wounded': isEasilyWounded, 'body-part--seriously-wounded': isSeriouslyWounded, 'body-part--deadly-wounded': isDeadlyWounded }]")
-  .body-part__timer(v-if="stabilizationTimer || isStabilized" @click.stop="giveFirstAid" v-long-press="500" @long-press-start="toggleTimeEditor") {{ stabilizationTimeLeftFormatted }}
+  .body-part__timer(v-if="stabilizationTimer || isStabilized" @click.stop="giveFirstAid" v-longclick="toggleTimeEditor") {{ stabilizationTimeLeftFormatted }}
     i.first-aid-icon(v-show="firstAidAvailable")
     .body-part__first-aid-icons
       i.first-aid-given-icon(v-show="firstAidGiven")
